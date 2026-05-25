@@ -42,7 +42,7 @@ services:
       - observability
 
   grafana:
-    image: grafana/grafana:latest
+    image: grafana/grafana:10.4.3
     container_name: grafana
     restart: unless-stopped
     ports:
