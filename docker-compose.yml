@@ -51,3 +51,15 @@ services:
       - grafana_data:/var/lib/grafana
     networks:
       - observability
+  
+  loki:
+    image: grafana/loki:2.9.0
+    container_name: loki
+    restart: unless-stopped
+    ports:
+      - "3100:3100"
+    volumes:
+      - loki_data:/loki
+    command: -config.file=/etc/loki/local-config.yaml
+    networks:
+      - observability
