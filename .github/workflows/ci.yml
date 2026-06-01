@@ -1,0 +1,36 @@
+name: CI - Observability Stack
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  smoke-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Start stack
+        run: docker compose up -d --build
+
+      - name: Wait for services
+        run: sleep 30
+
+      - name: Check Prometheus is up
+        run: curl -f http://localhost:9090/-/healthy
+
+      - name: Check Loki is up
+        run: curl -f http://localhost:3100/ready
+
+      - name: Check Tempo is up
+        run: curl -f http://localhost:3200/ready
+
+      - name: Check app metrics
+        run: curl -f http://localhost:8000/metrics
+
+      - name: Tear down
+        run: docker compose down
