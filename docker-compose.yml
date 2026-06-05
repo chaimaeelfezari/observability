@@ -55,6 +55,8 @@ services:
       - "8000:8000"
     networks:
       - observability
+    depends_on:
+      - otel-collector
 
   prometheus:
     image: prom/prometheus:latest
@@ -78,6 +80,7 @@ services:
       - "3000:3000"
     volumes:
       - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning
     networks:
       - observability
 
@@ -89,6 +92,7 @@ services:
       - "3100:3100"
     volumes:
       - loki_data:/loki
+      - ./loki/loki-config.yaml:/etc/loki/local-config.yaml
     command: -config.file=/etc/loki/local-config.yaml
     networks:
       - observability
