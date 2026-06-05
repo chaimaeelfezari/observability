@@ -8,7 +8,7 @@ import time, random
 
 resource = Resource.create({"service.name": "python-app"})
 provider = TracerProvider(resource=resource)
-otlp_exporter = OTLPSpanExporter(endpoint="http://tempo:4317", insecure=True)
+otlp_exporter = OTLPSpanExporter(endpoint="http://otel-collector:4317", insecure=True)
 provider.add_span_processor(BatchSpanProcessor(otlp_exporter))
 trace.set_tracer_provider(provider)
 tracer = trace.get_tracer(__name__)
