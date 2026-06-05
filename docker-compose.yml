@@ -53,6 +53,8 @@ services:
     restart: unless-stopped
     ports:
       - "8000:8000"
+    depends_on:
+      - otel-collector
     networks:
       - observability
     depends_on:
@@ -83,7 +85,7 @@ services:
       - ./grafana/provisioning:/etc/grafana/provisioning
     networks:
       - observability
-
+      
   loki:
     image: grafana/loki:2.9.0
     container_name: loki
