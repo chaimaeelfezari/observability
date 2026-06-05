@@ -16,9 +16,22 @@ services:
     container_name: node-exporter
     restart: unless-stopped
     ports:
-      - "9100:9100"
+      - 9100:9100
     networks:
       - observability
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:latest
+    container_name: otel-collector
+    restart: unless-stopped
+    ports:
+      - "4317:4317"
+      - "4318:4318"
+      - "8889:8889"
+    volumes:
+      - ./otel/otel-collector-config.yml:/etc/otel/config.yml
+    command: ["--config=/etc/otel/config.yml"]
+    networks:
+      - observability    
 
   promtail:
     image: grafana/promtail:2.9.0
@@ -85,8 +98,6 @@ services:
     restart: unless-stopped
     ports:
       - "3200:3200"
-      - "4317:4317"
-      - "4318:4318"
     volumes:
       - ./tempo/tempo.yaml:/etc/tempo/tempo.yaml
       - tempo_data:/tmp/tempo
