@@ -18,7 +18,7 @@ jobs:
         run: docker compose up -d --build
 
       - name: Wait for services
-        run: sleep 60
+        run: sleep 90
 
       - name: Check Prometheus is up
         run: curl -f http://localhost:9090/-/healthy
