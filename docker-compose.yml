@@ -57,8 +57,6 @@ services:
       - otel-collector
     networks:
       - observability
-    depends_on:
-      - otel-collector
 
   prometheus:
     image: prom/prometheus:latest
