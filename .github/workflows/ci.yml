@@ -18,7 +18,13 @@ jobs:
         run: docker compose up -d --build
 
       - name: Wait for services
-        run: sleep 90
+        run: |
+          echo "Waiting for Loki..."
+          for i in {1..30}; do
+            curl -sf http://localhost:3100/ready && break
+            echo "Attempt $i failed, retrying in 5s..."
+            sleep 5
+          done
 
       - name: Check Prometheus is up
         run: curl -f http://localhost:9090/-/healthy
