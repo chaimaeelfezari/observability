@@ -93,7 +93,12 @@ services:
     volumes:
       - loki_data:/loki
       - ./loki/loki-config.yaml:/etc/loki/local-config.yaml
-    command: -config.file=/etc/loki/local-config.yaml
+    entrypoint:
+      - sh
+      - -c
+      - |
+        mkdir -p /loki/index /loki/cache /loki/chunks /loki/compactor
+        exec /usr/bin/loki -config.file=/etc/loki/local-config.yaml
     networks:
       - observability
   tempo:
