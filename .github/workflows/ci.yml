@@ -25,6 +25,12 @@ jobs:
             echo "Attempt $i failed, retrying in 5s..."
             sleep 5
           done
+          echo "Waiting for Tempo..."
+          for i in {1..30}; do
+            curl -sf http://localhost:3200/ready && break
+            echo "Tempo attempt $i failed, retrying in 5s..."
+            sleep 5
+          done
 
       - name: Check Prometheus is up
         run: curl -f http://localhost:9090/-/healthy
