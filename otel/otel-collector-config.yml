@@ -13,13 +13,13 @@ processors:
     check_interval: 1s
 
 exporters:
-  otlp:
+  otlp_grpc: 
     endpoint: tempo:4317
     tls:
       insecure: true
   prometheus:
     endpoint: "0.0.0.0:8889"
-  otlphttp/loki:
+  otlp_http/loki:  
     endpoint: http://loki:3100/otlp
 
 service:
@@ -27,12 +27,13 @@ service:
     traces:
       receivers: [otlp]
       processors: [memory_limiter, batch]
-      exporters: [otlp]
+      exporters: [otlp_grpc]
     metrics:
       receivers: [otlp]
-      processors: [batch]
+      processors: [memory_limiter, batch]
       exporters: [prometheus]
     logs:
       receivers: [otlp]
-      processors: [batch]
-      exporters: [otlphttp/loki]
+      processors: [memory_limiter, batch]
+      exporters: [otlp_http/loki]
+ 

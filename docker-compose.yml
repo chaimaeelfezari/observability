@@ -101,7 +101,7 @@ services:
       - sh
       - -c
       - |
-        mkdir -p /loki/index /loki/cache /loki/chunks /loki/compactor
+        mkdir -p /loki/index /loki/cache /loki/chunks /loki/compactor /loki/wal
         exec /usr/bin/loki -config.file=/etc/loki/local-config.yaml
     networks:
       - observability
