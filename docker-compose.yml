@@ -117,3 +117,44 @@ services:
     command: -config.file=/etc/tempo/tempo.yaml
     networks:
       - observability
+  auth-service:
+    build: ./services/auth-service
+    ports:
+      - "8001:8000"
+    depends_on:
+      - otel-collector
+    networks:
+      - observability
+
+  db-service:
+    build: ./services/db-service
+    ports:
+      - "8002:8000"
+    depends_on:
+      - otel-collector
+    networks:
+      - observability
+
+  alertmanager:
+    image: prom/alertmanager:latest
+    container_name: alertmanager
+    restart: unless-stopped
+    ports:
+      - "9093:9093"
+    volumes:
+      - ./alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.yml'
+    networks:
+      - observability
+
+  api-gateway:
+    build: ./services/api-gateway
+    ports:
+      - "8003:8000"
+    depends_on:
+      - otel-collector
+      - auth-service
+      - db-service
+    networks:
+      - observability

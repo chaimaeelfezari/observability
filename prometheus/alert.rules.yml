@@ -17,3 +17,11 @@ groups:
         annotations:
           summary: "High CPU"
           description: "CPU above 80% for 2 minutes."
+      - alert: HighErrorRate
+        expr: rate(app_errors_total[2m]) / rate(app_requests_total[2m]) > 0.1
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Taux d'erreur élevé"
+          description: "Plus de 10% des requêtes échouent depuis 1 minute."

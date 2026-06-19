@@ -17,8 +17,7 @@ jobs:
 
       - name: Wait for services
         run: |
-          echo "Waiting for Loki..."
-          for i in {1..30}; do
+          for i in {1..60}; do
             curl -sf http://localhost:3100/ready && break
             if [ $i -eq 30 ]; then echo "Loki timeout" && exit 1; fi
             sleep 5
