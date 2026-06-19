@@ -15,16 +15,28 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Wait for services
+      - name: Start stack
+        run: docker compose up -d --build
+
+      - name: Wait for Prometheus
         run: |
-          for i in {1..60}; do
-            curl -sf http://localhost:3100/ready && break
-            if [ $i -eq 30 ]; then echo "Loki timeout" && exit 1; fi
-            sleep 5
-          done
-          echo "Waiting for Tempo..."
-          for i in {1..30}; do
-            curl -sf http://localhost:3200/ready && break
-            if [ $i -eq 30 ]; then echo "Tempo timeout" && exit 1; fi
-            sleep 5
-          done
+         for i in {1..30};do
+           curl -sf http://localhost:9090/-/ready && break 
+           sleep 5
+         done
+
+      - name: Wait for Loki
+        run: |
+         for i in {1..60}; do
+           STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3100/ready)
+           if [ "$STATUS" = "200" ]; then echo "Loki ready"; break; fi
+           echo "Loki not ready yet ($STATUS), retrying $i/60..."
+           sleep 5
+         done
+
+      - name: Wait for Tempo
+        run: |
+         for i in {1..30}; do
+           curl -sf http://localhost:3200/ready && break
+           sleep 5
+         done
