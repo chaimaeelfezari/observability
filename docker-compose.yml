@@ -158,3 +158,7 @@ services:
       - db-service
     networks:
       - observability
+  discord-proxy:
+    build: ./discord-proxy
+    ports:
+      - "5001:5001"

@@ -1,3 +1,6 @@
+global:
+  resolve_timeout: 1m
+
 route:
   receiver: discord
   group_wait: 10s
@@ -6,9 +9,6 @@ route:
 
 receivers:
   - name: discord
-    slack_configs:
-      - api_url: 'https://discord.com/api/webhooks/1517564415363387603/GOksgqJMG3lmwGqxHsA3rQK9KFjz7BJ3x1Q-M0AsqmMXTML9TTWrsSa3eEGEjE1osW-P/slack'
-        channel: '#alerts'
+    webhook_configs:
+      - url: 'http://discord-proxy:5001/webhook'
         send_resolved: true
-        title: '{{ .CommonAnnotations.summary }}'
-        text: '{{ .CommonAnnotations.description }}'
